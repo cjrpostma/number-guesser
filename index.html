@@ -5,6 +5,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script defer
             src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -13,8 +15,8 @@
   </head>
   <body>
     <header class="header">
-      <h1 class="header__h1 uppercase">Number
-        <span class="font-light">Guesser</span></h1>
+      <h1 class="header__h1 font-heavy uppercase">Number<span
+              class="font-light">Guesser</span></h1>
       <p class="header__subtitle font-light uppercase">Ultimate Challenger
         Edition</p>
     </header>
@@ -24,77 +26,104 @@
           <h3 class="section__header">Set Range</h3>
           <div class="group">
             <label class="group__label" for="min-range">Min Range</label>
-            <input id="min-range" type="text">
+            <input class="input" id="min-range" type="text">
           </div>
           <div class="group">
             <label class="group__label" for="max-range">Max Range</label>
-            <input id="max-range" type="text">
+            <input class="input" id="max-range" type="text">
           </div>
-          <button id="update-button" class="button">Update</button>
+          <button id="update-button" class="button button--update">Update
+          </button>
         </section>
         <section class="section section__challenger">
-          <p>The Current Range is <span class="range--limit">1</span> to
+          <p class="range--display">The Current Range is <span
+                  class="range--limit">1
+          </span> to
             <span class="range--limit">100</span></p>
-          <h3 class="section__header">Challenger 1</h3>
-          <div class="group group--inputs">
-            <label class="group__label" for="challenger-1-name">Name</label>
-            <input id="challenger-1-name" type="text">
-          </div>
-          <div class="group group--inputs">
-            <label class="group__label" for="challenger-1-guess">Guess</label>
-            <input id="challenger-1-guess" type="text">
-          </div>
-          <h3 class="section__header">Challenger 2</h3>
-          <div class="group group--inputs">
-            <label class="group__label" for="challenger-2-name">Name</label>
-            <input id="challenger-2-name" type="text">
-          </div>
-          <div class="group group--inputs">
-            <label class="group__label" for="challenger-2-guess">Guess</label>
-            <input id="challenger-2-guess" type="text">
-          </div>
-          <button id="submit-guess-button" class="button">Submit Guess</button>
-          <button id="reset-game-button" class="button">Reset Game</button>
-          <button id="clear-game-button" class="button">Clear Game</button>
+          <article class="group group--challenger">
+            <h3 class="section__header">Challenger 1</h3>
+            <div class="group group--inputs">
+              <label class="group__label" for="challenger-1-name">Name</label>
+              <input class="input" id="challenger-1-name" type="text">
+            </div>
+            <div class="group group--inputs">
+              <label class="group__label" for="challenger-1-guess">Guess</label>
+              <input class="input" id="challenger-1-guess" type="text">
+            </div>
+          </article>
+          <article class="group group--challenger">
+            <h3 class="section__header">Challenger 2</h3>
+            <div class="group group--inputs">
+              <label class="group__label" for="challenger-2-name">Name</label>
+              <input class="input" id="challenger-2-name" type="text">
+            </div>
+            <div class="group group--inputs">
+              <label class="group__label" for="challenger-2-guess">Guess</label>
+              <input class="input" id="challenger-2-guess" type="text">
+            </div>
+          </article>
+          <button id="submit-guess-button" class="button button--submit">Submit
+            Guess
+          </button>
+          <button id="reset-game-button" class="button button--reset" disabled>
+            Reset
+            Game
+          </button>
+          <button id="clear-game-button" class="button button--clear" disabled>
+            Clear
+            Game
+          </button>
         </section>
         <section class="section__score">
-          <h3 class="section__header">Latest Score</h3>
-          <div class="group">
+          <h3 class="section__header section__header--score">Latest Score</h3>
+          <div class="group group--score group--score-chal1">
             <p class="group__title">Challenger 1 Name</p>
-            <p class="group__current">current guess</p>
-            <p class="group__guess">97</p>
-            <p class="group__feedback">that's too high</p>
+            <p class="group__current font-light">current guess</p>
+            <p class="group__guess font-heavy">97</p>
+            <p class="group__feedback font-light">that's too high</p>
           </div>
-          <div class="group">
+          <hr class="divider"/>
+          <div class="group group--score group--score-chal2">
             <p class="group__title">Challenger 2 Name</p>
-            <p class="group__current">current guess</p>
-            <p class="group__guess">3</p>
-            <p class="group__feedback">that's too low</p>
+            <p class="group__current font-light">current guess</p>
+            <p class="group__guess font-heavy">3</p>
+            <p class="group__feedback font-light">that's too low</p>
           </div>
         </section>
       </section>
+
       <section class="section section--output">
         <article class="article--game-result">
+
           <div class="group group--names">
-            <p class="group__title--strong uppercase">Challenger 1</p>
-            <p class="group__vs uppercase">VS</p>
-            <p class="group__title uppercase">Challenger 2</p>
+            <p class="group__title justify-right uppercase">Challenger 1
+              Name</p>
+            <p class="group__vs font-light uppercase">VS</p>
+            <p class="group__title justify-left uppercase">Challenger 2 Name</p>
           </div>
+
           <div class="group">
-            <p class="group__winner">Challenger 2 Name</p>
-            <p class="group__winner font-light">Winner</p>
+            <p class="group__winner font-heavy uppercase">Challenger 2 Name</p>
+            <p class="group__winner font-light uppercase">Winner</p>
           </div>
-          <div class="group">
-            <p class="group__title--light"><span
-                    class="guess-stat group__title-strong">23
+
+
+
+          <div class="group group--metrics">
+            <p class="group__metric font-light uppercase"><span
+                    class="group__metric--data font-heavy uppercase">23
             </span> Guesses</p>
-            <p class="group__title--light"><span
-                    class="time-stat group__title-strong">1.35
+            <p class="group__metric font-light uppercase justify-center"><span
+                    class="group__metric--data font-heavy uppercase">1.35
             </span> Minutes</p>
-            <button class="button button--close">X</button>
+            <button class="button--close justify-right"></button>
           </div>
+
+
+
         </article>
       </section>
+
     </main>
   </body>
 </html>
