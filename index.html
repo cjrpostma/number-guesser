@@ -26,11 +26,11 @@
           <h3 class="section__header">Set Range</h3>
           <div class="group">
             <label class="group__label" for="min-range">Min Range</label>
-            <input class="input" id="min-range" type="text">
+            <input class="input" id="min-range" type="number">
           </div>
           <div class="group">
             <label class="group__label" for="max-range">Max Range</label>
-            <input class="input" id="max-range" type="text">
+            <input class="input" id="max-range" type="number">
           </div>
           <button id="update-button" class="button button--update">Update
           </button>
@@ -48,7 +48,7 @@
             </div>
             <div class="group group--inputs">
               <label class="group__label" for="challenger-1-guess">Guess</label>
-              <input class="input" id="challenger-1-guess" type="text">
+              <input class="input" id="challenger-1-guess" type="number">
             </div>
           </article>
           <article class="group group--challenger">
@@ -59,7 +59,7 @@
             </div>
             <div class="group group--inputs">
               <label class="group__label" for="challenger-2-guess">Guess</label>
-              <input class="input" id="challenger-2-guess" type="text">
+              <input class="input" id="challenger-2-guess" type="number">
             </div>
           </article>
           <button id="submit-guess-button" class="button button--submit">Submit
@@ -100,8 +100,9 @@
             <p class="group__title justify-left uppercase">Challenger 2 Name</p>
           </div>
           <div class="group">
-            <p class="group__winner font-heavy uppercase">Challenger 2 Name</p>
-            <p class="group__winner font-light uppercase">Winner</p>
+            <p
+                    class="group__winner font-heavy justify-center uppercase">Challenger 2 Name</p>
+            <p class="group__winner font-light justify-center uppercase">Winner</p>
           </div>
           <div class="group group--metrics">
             <p class="group__metric font-light uppercase"><span
