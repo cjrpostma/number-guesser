@@ -7,6 +7,8 @@
   const main = document.querySelector('.main')
   const minRangeDisplay = document.querySelector('#range-min-display')
   const maxRangeDisplay = document.querySelector('#range-max-display')
+  let numberInputs = ['min-range', 'max-range', 'challenger-1-guess', 'challenger-2-guess']
+  let invalidNumberInputChars = ['e', 'E', '-', ',', '.', '=', '+']
 
   // As a user, the game selects a random number between the minRange and maxRange
   const generateRandom = () => {
@@ -43,6 +45,12 @@
       generateRandom()
       updatesRangeDisplay()
       console.log(randomNumber);
+    }
+  })
+
+  main.addEventListener('keydown', (e)=>{
+    if(numberInputs.includes(e.target.id) && invalidNumberInputChars.includes(e.key)) {
+        e.preventDefault()
     }
   })
 
