@@ -102,10 +102,6 @@ html {
   width: 30px;
 }
 
-.button--close:active {
-  background: red;
-}
-
 .button--close:after {
   border: 1px solid var(--light);
   content: "";
