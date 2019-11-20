@@ -13,7 +13,8 @@ $(document).ready(function () {
 
   cacheDom();
 
-  const numberInputs = ['min-range', 'max-range', 'challenger-1-guess', 'challenger-2-guess'];
+  const rangeInputs = ['min-range', 'max-range'];
+  const guessInputs = ['challenger-1-guess', 'challenger-2-guess'];
   const invalidNumberInputChars = ['e', 'E', '-', ',', '.', '=', '+'];
 
   // module for helper functions
@@ -29,9 +30,9 @@ $(document).ready(function () {
   const helperModule = (function () {
     /* =================== public methods ================== */
     function isBlank(...inputs) {
-      return inputs.every(input => {
+       return inputs.some(input => {
         return input.val() === '';
-      });
+      })
     }
 
     function isLessThan(input1, input2) {
@@ -51,7 +52,6 @@ $(document).ready(function () {
       isNegative: isNegative
     };
   })();
-
 
 
   // Blank name
@@ -75,7 +75,7 @@ $(document).ready(function () {
     /* =================== private methods ================= */
     function bindEvents() {
       DOM.$updateRangeButton.on('click', handleClick);
-      DOM.$main.on('keydown', handleKeydown);
+      DOM.$main.on('keydown keyup', handleKeydown);
     }
 
     function handleClick() {
@@ -88,9 +88,11 @@ $(document).ready(function () {
     }
 
     function handleKeydown(e) {
-      if (numberInputs.includes(e.target.id) && invalidNumberInputChars.includes(e.key)) {
+      if (rangeInputs.includes(e.target.id) && invalidNumberInputChars.includes(e.key)) {
         e.preventDefault();
       }
+
+      toggleUpdateButton()
     }
 
     function resetRangeInputs() {
@@ -99,6 +101,12 @@ $(document).ready(function () {
     }
 
     // update should be disabled unless inputs are filled
+    function toggleUpdateButton() {
+      DOM.$updateRangeButton.attr('disabled',
+          helperModule.isBlank(DOM.$userMinRange, DOM.$userMaxRange))
+    }
+
+
     // Min range and max range can't be blank and click submit
     // Min range, max range, guesses must be number (no symbols)
     // Min must be less than max
