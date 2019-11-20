@@ -1,18 +1,90 @@
 $(document).ready(function () {
 
-/* =================== module - validates inputs =================== */
-  const validateModule = (function () {
-    const DOM = {};
-    let numberInputs = ['min-range', 'max-range', 'challenger-1-guess', 'challenger-2-guess'];
-    let invalidNumberInputChars = ['e', 'E', '-', ',', '.', '=', '+'];
+  const DOM = {};
 
-    /* =================== private methods ================= */
-    function cacheDom() {
-      DOM.$main = $('.main');
+  function cacheDom() {
+    DOM.$main = $('.main');
+    DOM.$userMinRange = $('#min-range');
+    DOM.$userMaxRange = $('#max-range');
+    DOM.$updateRangeButton = $('#update-button');
+    DOM.$minRangeDisplay = $('#range-min-display');
+    DOM.$maxRangeDisplay = $('#range-max-display');
+  }
+
+  cacheDom();
+
+  const numberInputs = ['min-range', 'max-range', 'challenger-1-guess', 'challenger-2-guess'];
+  const invalidNumberInputChars = ['e', 'E', '-', ',', '.', '=', '+'];
+
+  // module for helper functions
+
+  // module to render things, errors, latest scores
+
+  //module to render cards
+  // the render error method can use template literals to construct the needed error message
+  // another method can append the message to the correct element
+  // another method can remove the error element when it is no longer necessary
+
+  /* =================== module - helper functions =================== */
+  const helperModule = (function () {
+    /* =================== public methods ================== */
+    function isBlank(...inputs) {
+      return inputs.every(input => {
+        return input.val() === '';
+      });
     }
 
+    function isLessThan(input1, input2) {
+      return input1 < input2;
+    }
+
+    function isNegative(...inputs) {
+      return inputs.every(input => {
+        return !(input > 0);
+      });
+    }
+
+    /* =============== export public methods =============== */
+    return {
+      isBlank: isBlank,
+      isLessThan: isLessThan,
+      isNegative: isNegative
+    };
+  })();
+
+
+
+  // Blank name
+  // name fields should disable and persist name once submit guess is clicked first time
+  // Blank guess
+  // Challenger names must be letters (no symbols or numbers)
+  // Challenger names must be <= 15 chars
+
+  // Render errors
+  // Clear errors
+
+
+  /* =================== module - range, rand num state =================== */
+  const rangeModule = (function () {
+    let range = {
+      min: 1,
+      max: 100
+    };
+    let randomNumber = setRandomNumber();
+
+    /* =================== private methods ================= */
     function bindEvents() {
+      DOM.$updateRangeButton.on('click', handleClick);
       DOM.$main.on('keydown', handleKeydown);
+    }
+
+    function handleClick() {
+      setRange();
+      randomNumber = setRandomNumber();
+      resetRangeInputs();
+      renderRangeDisplay();
+      console.log(randomNumber);
+      console.log(range);
     }
 
     function handleKeydown(e) {
@@ -21,70 +93,20 @@ $(document).ready(function () {
       }
     }
 
-    // Min range and max range can't be blank and click submit
-    // Min range, max range, guesses must be number (no symbols)
-    // Min must be less than max
-    // Min, max cannot be negative
-    // Max cannot be greater than 1000
-    // Blank name
-    // Blank guess
-    // Challenger names must be letters (no symbols or numbers)
-    // Challenger names must be <= 15 chars
-
-    // Render errors
-    // Clear errors
-
-    /* =================== public methods ================== */
-    function init() {
-      cacheDom();
-      bindEvents();
-    }
-
-    /* =============== export public methods =============== */
-    return {
-      init: init
-    };
-  })();
-
-
-/* =================== module - range, rand num state =================== */
-    const rangeModule = (function () {
-      const DOM = {};
-      let range = {
-        min: 1,
-        max: 100
-      };
-      let randomNumber = setRandomNumber()
-
-    /* =================== private methods ================= */
-    function cacheDom() {
-      DOM.$userMinRange = $('#min-range');
-      DOM.$userMaxRange = $('#max-range');
-      DOM.$updateRangeButton = $('#update-button');
-      DOM.$minRangeDisplay = $('#range-min-display');
-      DOM.$maxRangeDisplay = $('#range-max-display');
-    }
-
-    function bindEvents() {
-      DOM.$updateRangeButton.on('click', handleClick);
-    }
-
-    function handleClick() {
-      setRange();
-      resetRangeInputs();
-      randomNumber = setRandomNumber();
-      renderRangeDisplay();
-      console.log(randomNumber);
-    }
-
     function resetRangeInputs() {
       DOM.$userMinRange.val('');
       DOM.$userMaxRange.val('');
     }
 
+    // update should be disabled unless inputs are filled
+    // Min range and max range can't be blank and click submit
+    // Min range, max range, guesses must be number (no symbols)
+    // Min must be less than max
+    // Min, max cannot be negative
+
     /* =================== public methods ================== */
     function getRandomNumber() {
-      return randomNumber
+      return randomNumber;
     }
 
     function renderRangeDisplay() {
@@ -111,7 +133,6 @@ $(document).ready(function () {
     }
 
     function init() {
-      cacheDom();
       bindEvents();
       setRandomNumber();
       renderRangeDisplay();
@@ -128,10 +149,8 @@ $(document).ready(function () {
   })();
 
 
-/* =============== program execution =============== */
-  validateModule.init();
+  /* =============== program execution =============== */
   // Program starts with default range 1-100
   // Program starts with random number between default 1-100
   rangeModule.init();
-
 });
