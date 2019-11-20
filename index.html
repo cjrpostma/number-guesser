@@ -37,14 +37,16 @@
         </section>
         <section class="section section__challenger">
           <p class="range--display">The Current Range is <span
-                 id="range-min-display" class="range--limit">
+                  id="range-min-display" class="range--limit">
           </span> to
             <span id="range-max-display" class="range--limit"></span></p>
           <article class="group group--challenger">
             <h3 class="section__header">Challenger 1</h3>
             <div class="group group--inputs">
               <label class="group__label" for="challenger-1-name">Name</label>
-              <input class="input" id="challenger-1-name" type="text">
+              <input class="input" id="challenger-1-name" type="text"
+                     minlength="1" maxlength="20" pattern="[A-Za-z ]{1,15}"
+                     title="Name should only contain letters.">
             </div>
             <div class="group group--inputs">
               <label class="group__label" for="challenger-1-guess">Guess</label>
@@ -55,7 +57,9 @@
             <h3 class="section__header">Challenger 2</h3>
             <div class="group group--inputs">
               <label class="group__label" for="challenger-2-name">Name</label>
-              <input class="input" id="challenger-2-name" type="text">
+              <input class="input" id="challenger-2-name" type="text"
+                     minlength="1" maxlength="20" pattern="[A-Za-z ]{1,15}"
+                     title="Name should only contain letters.">
             </div>
             <div class="group group--inputs">
               <label class="group__label" for="challenger-2-guess">Guess</label>
@@ -100,9 +104,10 @@
             <p class="group__title justify-left uppercase">Challenger 2 Name</p>
           </div>
           <div class="group">
-            <p
-                    class="group__winner font-heavy justify-center uppercase">Challenger 2 Name</p>
-            <p class="group__winner font-light justify-center uppercase">Winner</p>
+            <p class="group__winner font-heavy justify-center uppercase">
+              Challenger 2 Name</p>
+            <p class="group__winner font-light justify-center uppercase">
+              Winner</p>
           </div>
           <div class="group group--metrics">
             <p class="group__metric font-light uppercase"><span
