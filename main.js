@@ -1,3 +1,5 @@
+'use strict';
+
 $(document).ready(function () {
 
   const DOM = {};
@@ -30,39 +32,28 @@ $(document).ready(function () {
   const helperModule = (function () {
     /* =================== public methods ================== */
     function isBlank(...inputs) {
-       return inputs.some(input => {
+      return inputs.some(input => {
         return input.val() === '';
-      })
+      });
     }
 
-    function isLessThan(input1, input2) {
-      return input1 < input2;
+    function isLessThanOrEqual(max, min) {
+      return max <= min;
     }
 
     function isNegative(...inputs) {
-      return inputs.every(input => {
-        return !(input > 0);
+      return inputs.some(input => {
+        return input < 0;
       });
     }
 
     /* =============== export public methods =============== */
     return {
       isBlank: isBlank,
-      isLessThan: isLessThan,
+      isLessThanOrEqual: isLessThanOrEqual,
       isNegative: isNegative
     };
   })();
-
-
-  // Blank name
-  // name fields should disable and persist name once submit guess is clicked first time
-  // Blank guess
-  // Challenger names must be letters (no symbols or numbers)
-  // Challenger names must be <= 15 chars
-
-  // Render errors
-  // Clear errors
-
 
   /* =================== module - range, rand num state =================== */
   const rangeModule = (function () {
@@ -79,12 +70,19 @@ $(document).ready(function () {
     }
 
     function handleClick() {
-      setRange();
-      randomNumber = setRandomNumber();
-      resetRangeInputs();
-      renderRangeDisplay();
-      console.log(randomNumber);
-      console.log(range);
+      if (helperModule.isNegative(DOM.$userMaxRange.val(), DOM.$userMinRange.val())) {
+        console.log('negative input error');
+      } else if (helperModule.isLessThanOrEqual(DOM.$userMaxRange.val(), DOM.$userMinRange.val       ())) {
+        console.log('less than error');
+      } else {
+        setRange();
+        randomNumber = setRandomNumber();
+        resetRangeInputs();
+        renderRangeDisplay();
+        toggleUpdateButton();
+        console.log(randomNumber);
+        console.log(range);
+      }
     }
 
     function handleKeydown(e) {
@@ -92,7 +90,7 @@ $(document).ready(function () {
         e.preventDefault();
       }
 
-      toggleUpdateButton()
+      toggleUpdateButton();
     }
 
     function resetRangeInputs() {
@@ -100,17 +98,10 @@ $(document).ready(function () {
       DOM.$userMaxRange.val('');
     }
 
-    // update should be disabled unless inputs are filled
     function toggleUpdateButton() {
       DOM.$updateRangeButton.attr('disabled',
-          helperModule.isBlank(DOM.$userMinRange, DOM.$userMaxRange))
+          helperModule.isBlank(DOM.$userMinRange, DOM.$userMaxRange));
     }
-
-
-    // Min range and max range can't be blank and click submit
-    // Min range, max range, guesses must be number (no symbols)
-    // Min must be less than max
-    // Min, max cannot be negative
 
     /* =================== public methods ================== */
     function getRandomNumber() {
@@ -155,6 +146,52 @@ $(document).ready(function () {
       setRandomNumber: setRandomNumber
     };
   })();
+
+
+  /* =================== module - name, guess state =================== */
+  const currentModule = (function () {
+
+    /* =================== private methods ================= */
+    function bindEvents() {
+    }
+
+    function handleClick() {
+      }
+    }
+
+    function handleKeydown(e) {
+      if (rangeInputs.includes(e.target.id) && invalidNumberInputChars.includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+
+    /* =================== public methods ================== */
+    function init() {
+      bindEvents();
+    }
+
+    /* =============== export public methods =============== */
+    return {
+      init: init,
+    };
+  })();
+
+
+
+
+
+
+
+  // Blank name
+  // name fields should disable and persist name once submit guess is clicked first time
+  // Blank guess
+  // Challenger names must be letters (no symbols or numbers)
+  // Challenger names must be <= 15 chars
+
+  // Render errors
+  // Clear errors
+
+
 
 
   /* =============== program execution =============== */
