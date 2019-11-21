@@ -151,8 +151,34 @@ html {
   width: 0;
 }
 
+.error {
+  align-items: center;
+  bottom: -18px;
+  color: var(--magenta);
+  display: flex;
+  flex-direction: row;
+  font-size: 0.7em;
+  left: 4px;
+  position: absolute;
+}
+
+.error--border {
+  border: 3px solid var(--magenta) !important;
+}
+
+.error__icon {
+  font-size: 0.6em;
+  padding-right: 3px;
+}
+
+.error__text {
+  display: inline;
+
+}
+
 .group {
   display: grid;
+  position: relative;
 }
 
 .group--challenger {
