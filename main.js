@@ -1,6 +1,6 @@
-'use strict';
 
 $(document).ready(function () {
+'use strict';
 
   const DOM = {};
 
@@ -177,7 +177,30 @@ $(document).ready(function () {
   })();
 
 
+  /* =================== module - name state =================== */
+  const guessModule = (function () {
 
+    /* =================== private methods ================= */
+    function bindEvents() {
+      DOM.$main.on('keydown', '#challenger-1-name, #challenger-2-name', handleKeydown)
+    }
+
+    function handleKeydown(e) {
+      if (!e.key.match(/^([a-zA-Z]+\s)*[a-zA-Z\s]+$/)) {
+        e.preventDefault();
+      }
+    }
+
+    /* =================== public methods ================== */
+    function init() {
+      bindEvents();
+    }
+
+    /* =============== export public methods =============== */
+    return {
+      init: init,
+    };
+  })();
 
 
 
