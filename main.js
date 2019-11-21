@@ -5,19 +5,22 @@ $(document).ready(function () {
   const DOM = {};
 
   function cacheDom() {
+    DOM.$challenger1Guess = $('#challenger-1-guess')
+    DOM.$challenger2Guess = $('#challenger-2-guess')
+    DOM.$challenger1Name = $('#challenger-1-name')
+    DOM.$challenger2Name = $('#challenger-2-name')
     DOM.$main = $('.main');
+    DOM.$maxRangeDisplay = $('#range-max-display');
+    DOM.$minRangeDisplay = $('#range-min-display');
+    DOM.$updateRangeButton = $('#update-button');
     DOM.$userMinRange = $('#min-range');
     DOM.$userMaxRange = $('#max-range');
-    DOM.$updateRangeButton = $('#update-button');
-    DOM.$minRangeDisplay = $('#range-min-display');
-    DOM.$maxRangeDisplay = $('#range-max-display');
   }
 
   cacheDom();
 
-  const rangeInputs = ['min-range', 'max-range'];
-  const guessInputs = ['challenger-1-guess', 'challenger-2-guess'];
   const invalidNumberInputChars = ['e', 'E', '-', ',', '.', '=', '+'];
+  const rangeInputs = ['min-range', 'max-range'];
 
   // module for helper functions
 
@@ -66,7 +69,7 @@ $(document).ready(function () {
     /* =================== private methods ================= */
     function bindEvents() {
       DOM.$updateRangeButton.on('click', handleClick);
-      DOM.$main.on('keydown keyup', handleKeydown);
+      DOM.$main.on('keydown keyup', '#min-range, #max-range', handleKeydown);
     }
 
     function handleClick() {
@@ -86,7 +89,7 @@ $(document).ready(function () {
     }
 
     function handleKeydown(e) {
-      if (rangeInputs.includes(e.target.id) && invalidNumberInputChars.includes(e.key)) {
+      if (invalidNumberInputChars.includes(e.key)) {
         e.preventDefault();
       }
 
@@ -148,19 +151,16 @@ $(document).ready(function () {
   })();
 
 
-  /* =================== module - name, guess state =================== */
-  const currentModule = (function () {
+  /* =================== module - name state =================== */
+  const nameModule = (function () {
 
     /* =================== private methods ================= */
     function bindEvents() {
-    }
-
-    function handleClick() {
-      }
+      DOM.$main.on('keydown', '#challenger-1-name, #challenger-2-name', handleKeydown)
     }
 
     function handleKeydown(e) {
-      if (rangeInputs.includes(e.target.id) && invalidNumberInputChars.includes(e.key)) {
+      if (!e.key.match(/^([a-zA-Z]+\s)*[a-zA-Z\s]+$/)) {
         e.preventDefault();
       }
     }
@@ -184,9 +184,8 @@ $(document).ready(function () {
 
   // Blank name
   // name fields should disable and persist name once submit guess is clicked first time
+
   // Blank guess
-  // Challenger names must be letters (no symbols or numbers)
-  // Challenger names must be <= 15 chars
 
   // Render errors
   // Clear errors
@@ -198,4 +197,5 @@ $(document).ready(function () {
   // Program starts with default range 1-100
   // Program starts with random number between default 1-100
   rangeModule.init();
+  nameModule.init()
 });
