@@ -17,6 +17,7 @@ $(document).ready(function () {
   const $scoreChal2Guess = $('#score-c2-guess');
   const $scoreChal1Name = $('#score-c1-name');
   const $scoreChal2Name = $('#score-c2-name');
+  const $sectionOutput = $('.section--output')
   const $submitGuessButton = $('#submit-guess-button');
   const $updateRangeButton = $('#update-button');
   const $userMinRange = $('#min-range');
@@ -134,6 +135,64 @@ $(document).ready(function () {
     $scoreChal2Guess.text($chal2Guess.val());
   }
 
+  // game cards
+  // ----------------------------------------------------------------
+  class Game {
+    constructor(chal1Name, chal2Name, winnerName) {
+      this.chal1Name = chal1Name;
+      this.chal2Name = chal2Name;
+      this.winnerName = winnerName;
+      this.guess = 0;
+      this.endTime = {};
+      this.startTime = {};
+    }
+
+    incrementGuess() {
+      this.guess += 1;
+    }
+
+    startTimer() {
+      this.startTime = Date.now();
+    }
+
+    endTimer() {
+      this.endTime = (((Date.now() - this.startTime) / 1000) / 60).toFixed(2);
+    }
+  }
+
+  function appendGameCard() {
+    let gameNode = renderGameCard(game);
+
+    $sectionOutput.append(gameNode);
+  }
+
+  function renderGameCard(game) {
+    return `<article class="article--game-result">
+              <div class="group group--names">
+                <p class="group__title justify-right uppercase">${game.chal1Name}</p>
+                <p class="group__vs font-light uppercase">VS</p>
+                <p class="group__title justify-left uppercase">${game.chal2Name}</p>
+              </div>
+              <div class="group">
+                <p class="group__winner font-heavy justify-center uppercase">
+                  ${game.winnerName}</p>
+                <p class="group__winner font-light justify-center uppercase">
+                  Winner</p>
+              </div>
+              <div class="group group--metrics">
+                <p class="group__metric font-light uppercase"><span
+                        class="group__metric--data font-heavy uppercase">${game.guess}
+                </span> Guesses</p>
+                <p class="group__metric font-light uppercase justify-center"><span
+                        class="group__metric--data font-heavy uppercase">
+                        ${game.endTime}
+                </span> Minutes</p>
+                <button class="button--close justify-right"></button>
+              </div>
+            </article>`;
+  }
+
+
   // errors
   // ----------------------------------------------------------------
   function appendErrorNode(input, message) {
@@ -216,7 +275,7 @@ $(document).ready(function () {
     }
 
     if (isNegative($chal1Guess, $chal2Guess)) {
-      return
+      return;
     }
 
     disableNameInputs();
@@ -253,9 +312,7 @@ $(document).ready(function () {
 });
 
 // TODO add responsive design
-// TODO add timer
 // TODO add game class to render cards
-// TODO add rendering of game cards
 // TODO add close button listener on right side of page
 // TODO add guess counter
 // TODO add reset game functionality
