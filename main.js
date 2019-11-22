@@ -4,11 +4,21 @@ $(document).ready(function () {
 
   // cache dom
   // ----------------------------------------------------------------
+  const $chal1Name = $('#challenger-1-name');
+  const $chal2Name = $('#challenger-2-name');
+  const $chal1Guess = $('#challenger-1-guess');
+  const $chal2Guess = $('#challenger-2-guess');
   const $main = $('.main');
   const $maxRangeDisplay = $('#range-max-display');
   const $minRangeDisplay = $('#range-min-display');
-  const $updateRangeButton = $('#update-button');
+  const $scoreChal1Feedback = $('#score-c1-feedback');
+  const $scoreChal2Feedback = $('#score-c2-feedback');
+  const $scoreChal1Guess = $('#score-c1-guess');
+  const $scoreChal2Guess = $('#score-c2-guess');
+  const $scoreChal1Name = $('#score-c1-name');
+  const $scoreChal2Name = $('#score-c2-name');
   const $submitGuessButton = $('#submit-guess-button');
+  const $updateRangeButton = $('#update-button');
   const $userMinRange = $('#min-range');
   const $userMaxRange = $('#max-range');
 
@@ -16,6 +26,7 @@ $(document).ready(function () {
   // ----------------------------------------------------------------
   let range = {min: 1, max: 100};
   let randomNumber = setRandomNumber();
+  let feedback = {low: `that's too low`, high: `that's too high`, correct: `correct!`};
 
   // helpers
   // ----------------------------------------------------------------
@@ -80,7 +91,48 @@ $(document).ready(function () {
 
   // name, guess, submit, reset, clear
   // ----------------------------------------------------------------
+  function disableNameInputs() {
+    $chal1Name.attr('disabled', true);
+    $chal2Name.attr('disabled', true);
+  }
 
+  function enableNameInputs() {
+    $chal1Name.attr('disabled', false);
+    $chal2Name.attr('disabled', false);
+  }
+
+  function resetGuessInputs() {
+    $chal1Guess.val('');
+    $chal2Guess.val('');
+  }
+
+  // latest score
+  // ----------------------------------------------------------------
+  function renderChallengerNames() {
+    $scoreChal1Name.text($chal1Name.val());
+    $scoreChal2Name.text($chal2Name.val());
+  }
+
+  function renderChallengerFeedback() {
+    $scoreChal1Feedback.text(parseChallengerFeedback($chal1Guess.val()));
+    $scoreChal2Feedback.text(parseChallengerFeedback($chal2Guess.val()));
+  }
+
+  function parseChallengerFeedback(guess) {
+    switch (true) {
+      case (guess < randomNumber):
+        return feedback.low;
+      case (guess > randomNumber):
+        return feedback.high;
+      default:
+        return feedback.correct;
+    }
+  }
+
+  function renderChallengerGuesses() {
+    $scoreChal1Guess.text($chal1Guess.val());
+    $scoreChal2Guess.text($chal2Guess.val());
+  }
 
   // errors
   // ----------------------------------------------------------------
@@ -99,7 +151,7 @@ $(document).ready(function () {
   }
 
   function removeErrorNode(input) {
-    input.parent().find('.error').remove()
+    input.parent().find('.error').remove();
   }
 
   function renderErrorNode(message) {
@@ -111,7 +163,7 @@ $(document).ready(function () {
 
   // event listeners
   // ----------------------------------------------------------------
-  $main.on('keydown', '#challenger-1-name, #challenger-2-name', handleNameKeydown);
+  $main.on('keydown keyup', '#challenger-1-name, #challenger-2-name', handleNameKeydown);
   $main.on('keydown keyup', '#min-range, #max-range, #challenger-1-guess, #challenger-2-guess', handleNumberKeydown);
   $updateRangeButton.on('click', handleUpdateClick);
   $submitGuessButton.on('click', handleSubmitClick);
@@ -123,7 +175,10 @@ $(document).ready(function () {
       e.preventDefault();
     }
 
-    removeErrorBorder(e);
+    if (e.target.value !== '') {
+      removeErrorBorder($(e.target));
+      removeErrorNode($(e.target));
+    }
   }
 
   function handleNumberKeydown(e) {
@@ -141,11 +196,34 @@ $(document).ready(function () {
       removeErrorNode($(e.target));
     }
 
+    if (e.target.id === 'max-range') {
+      if (e.target.value <= parseInt($userMinRange.val())) {
+        appendErrorNode($(e.target), 'Min must be less than max.');
+      }
+    }
+
     toggleUpdateButton();
   }
 
   function handleSubmitClick() {
+    if (isBlank($chal1Name, $chal2Name, $chal1Guess, $chal2Guess)) {
+      let blankInputs = whichIsBlank($chal1Name, $chal2Name, $chal1Guess, $chal2Guess);
+      blankInputs.map(input => {
+        addErrorBorder(input);
+        appendErrorNode(input, 'Field required.');
+      });
+      return;
+    }
 
+    if (isNegative($chal1Guess, $chal2Guess)) {
+      return
+    }
+
+    disableNameInputs();
+    renderChallengerNames();
+    renderChallengerGuesses();
+    renderChallengerFeedback();
+    resetGuessInputs();
   }
 
   function handleUpdateClick() {
