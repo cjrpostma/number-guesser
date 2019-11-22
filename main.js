@@ -135,6 +135,11 @@ $(document).ready(function () {
     $chal2Name.attr('disabled', false);
   }
 
+  function resetChallengerNames() {
+    $chal1Name.val('');
+    $chal2Name.val('');
+  }
+
   function resetGuessInputs() {
     $chal1Guess.val('');
     $chal2Guess.val('');
@@ -148,6 +153,14 @@ $(document).ready(function () {
     }
   }
 
+  function disableClearButton() {
+    $clearGameButton.attr('disabled', true);
+  }
+
+  function enableClearButton() {
+    $clearGameButton.attr('disabled', false);
+  }
+
   // latest score
   // ----------------------------------------------------------------
   function resetScore() {
@@ -155,6 +168,11 @@ $(document).ready(function () {
     $scoreChal2Guess.text('--');
     $scoreChal1Feedback.text('');
     $scoreChal2Feedback.text('');
+  }
+
+  function resetScoreName() {
+    $scoreChal1Name.val('');
+    $scoreChal2Name.val('');
   }
 
   function renderChallengerNames() {
@@ -224,6 +242,7 @@ $(document).ready(function () {
     randomNumber = setRandomNumber();
     renderRangeDisplay();
     resetScore();
+    enableClearButton();
   }
 
   function renderGameCard(game) {
@@ -286,9 +305,25 @@ $(document).ready(function () {
   $updateRangeButton.on('click', handleUpdateClick);
   $submitGuessButton.on('click', handleSubmitClick);
   $resetGameButton.on('click', handleResetClick);
+  $clearGameButton.on('click', handleClearClick);
 
   // event handlers
   // ----------------------------------------------------------------
+  function handleClearClick() {
+    disableClearButton();
+    $resetGameButton.attr('disabled', true)
+    $sectionOutput.children().remove();
+    resetChallengerNames();
+    enableNameInputs();
+    currentGame = '';
+    gameHistory = [];
+    resetRange();
+    randomNumber = setRandomNumber();
+    renderRangeDisplay();
+    resetScoreName();
+    resetScore();
+  }
+
   function handleNameKeydown(e) {
     if (!e.key.match(/^([a-zA-Z]+\s)*[a-zA-Z\s]+$/)) {
       e.preventDefault();
@@ -395,5 +430,4 @@ $(document).ready(function () {
 
 // TODO add responsive design
 // TODO add close button listener on right side of page
-// TODO add reset game functionality
 // TODO add clear game functionality
