@@ -8,9 +8,11 @@ $(document).ready(function () {
   const $chal2Name = $('#challenger-2-name');
   const $chal1Guess = $('#challenger-1-guess');
   const $chal2Guess = $('#challenger-2-guess');
+  const $clearGameButton = $('#clear-game-button');
   const $main = $('.main');
   const $maxRangeDisplay = $('#range-max-display');
   const $minRangeDisplay = $('#range-min-display');
+  const $resetGameButton = $('#reset-game-button');
   const $scoreChal1Feedback = $('#score-c1-feedback');
   const $scoreChal2Feedback = $('#score-c2-feedback');
   const $scoreChal1Guess = $('#score-c1-guess');
@@ -36,17 +38,17 @@ $(document).ready(function () {
   function checkIfWinner() {
     switch (true) {
       case (parseInt($chal1Guess.val()) === randomNumber &&
-            parseInt($chal2Guess.val()) === randomNumber):
-        currentGame.winnerName = 'Tie game!'
-        isWinner()
+          parseInt($chal2Guess.val()) === randomNumber):
+        currentGame.winnerName = 'Tie game!';
+        isWinner();
         break;
       case (parseInt($chal1Guess.val()) === randomNumber):
-        currentGame.winnerName = currentGame.chal1Name
-        isWinner()
+        currentGame.winnerName = currentGame.chal1Name;
+        isWinner();
         break;
       case (parseInt($chal2Guess.val()) === randomNumber):
-        currentGame.winnerName = currentGame.chal2Name
-        isWinner()
+        currentGame.winnerName = currentGame.chal2Name;
+        isWinner();
         break;
       default:
         return;
@@ -138,13 +140,21 @@ $(document).ready(function () {
     $chal2Guess.val('');
   }
 
+  function toggleResetButton() {
+    if (currentGame !== '') {
+      $resetGameButton.attr('disabled', false);
+    } else if (currentGame === '') {
+      $resetGameButton.attr('disabled', true);
+    }
+  }
+
   // latest score
   // ----------------------------------------------------------------
   function resetScore() {
-    $scoreChal1Guess.text('--')
-    $scoreChal2Guess.text('--')
-    $scoreChal1Feedback.text('')
-    $scoreChal2Feedback.text('')
+    $scoreChal1Guess.text('--');
+    $scoreChal2Guess.text('--');
+    $scoreChal1Feedback.text('');
+    $scoreChal2Feedback.text('');
   }
 
   function renderChallengerNames() {
@@ -205,15 +215,15 @@ $(document).ready(function () {
   }
 
   function isWinner() {
-    currentGame.endTimer()
-    appendGameCard(currentGame)
+    currentGame.endTimer();
+    appendGameCard(currentGame);
     currentGame.endTime = '';
-    currentGame.winnerName = ''
-    currentGame.guess = 0
-    incrementRange()
-    randomNumber = setRandomNumber()
-    renderRangeDisplay()
-    resetScore()
+    currentGame.winnerName = '';
+    currentGame.guess = 0;
+    incrementRange();
+    randomNumber = setRandomNumber();
+    renderRangeDisplay();
+    resetScore();
   }
 
   function renderGameCard(game) {
@@ -275,6 +285,7 @@ $(document).ready(function () {
   $main.on('keydown keyup', '#min-range, #max-range, #challenger-1-guess, #challenger-2-guess', handleNumberKeydown);
   $updateRangeButton.on('click', handleUpdateClick);
   $submitGuessButton.on('click', handleSubmitClick);
+  $resetGameButton.on('click', handleResetClick);
 
   // event handlers
   // ----------------------------------------------------------------
@@ -294,23 +305,34 @@ $(document).ready(function () {
       e.preventDefault();
     }
 
-    if (e.target.value < 0 && (e.target.parentNode.children.length < 3)) {
+    if (parseInt(e.target.value) < 0 && (e.target.parentNode.children.length < 3)) {
       addErrorBorder($(e.target));
       appendErrorNode($(e.target), 'Number must be positive.');
     }
 
-    if (e.target.value >= 0) {
+    if (parseInt(e.target.value) >= 0) {
       removeErrorBorder($(e.target));
       removeErrorNode($(e.target));
     }
 
     if (e.target.id === 'max-range') {
-      if (e.target.value <= parseInt($userMinRange.val())) {
+      if (parseInt(e.target.value) <= parseInt($userMinRange.val())) {
+        addErrorBorder($(e.target));
         appendErrorNode($(e.target), 'Min must be less than max.');
       }
     }
 
     toggleUpdateButton();
+  }
+
+  function handleResetClick() {
+    resetRange();
+    renderRangeDisplay();
+    randomNumber = setRandomNumber();
+    resetScore();
+    currentGame.startTimer();
+    currentGame.guess = 0;
+    console.log(randomNumber);
   }
 
   function handleSubmitClick() {
@@ -336,6 +358,7 @@ $(document).ready(function () {
 
     currentGame.incrementGuess();
     disableNameInputs();
+    toggleResetButton();
     renderChallengerNames();
     renderChallengerGuesses();
     renderChallengerFeedback();
@@ -346,16 +369,17 @@ $(document).ready(function () {
   function handleUpdateClick() {
     if (isNegative($userMinRange, $userMaxRange)) {
       return;
-    } else if (isLessThanOrEqual($userMaxRange, $userMinRange)) {
-      return;
-    } else {
-      setRange();
-      randomNumber = setRandomNumber();
-      console.log(randomNumber);
-      resetRangeInputs();
-      renderRangeDisplay();
-      toggleUpdateButton();
     }
+
+    if (isLessThanOrEqual($userMaxRange, $userMinRange)) {
+      return;
+    }
+
+    setRange();
+    randomNumber = setRandomNumber();
+    console.log(randomNumber);
+    resetRangeInputs();
+    renderRangeDisplay();
   }
 
   // start game
