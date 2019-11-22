@@ -17,7 +17,7 @@ $(document).ready(function () {
   const $scoreChal2Guess = $('#score-c2-guess');
   const $scoreChal1Name = $('#score-c1-name');
   const $scoreChal2Name = $('#score-c2-name');
-  const $sectionOutput = $('.section--output')
+  const $sectionOutput = $('.section--output');
   const $submitGuessButton = $('#submit-guess-button');
   const $updateRangeButton = $('#update-button');
   const $userMinRange = $('#min-range');
@@ -25,12 +25,34 @@ $(document).ready(function () {
 
   // globals
   // ----------------------------------------------------------------
+  let currentGame = '';
+  let feedback = {low: `that's too low`, high: `that's too high`, correct: `correct!`};
+  let gameHistory = [];
   let range = {min: 1, max: 100};
   let randomNumber = setRandomNumber();
-  let feedback = {low: `that's too low`, high: `that's too high`, correct: `correct!`};
 
   // helpers
   // ----------------------------------------------------------------
+  function checkIfWinner() {
+    switch (true) {
+      case (parseInt($chal1Guess.val()) === randomNumber &&
+            parseInt($chal2Guess.val()) === randomNumber):
+        currentGame.winnerName = 'Tie game!'
+        isWinner()
+        break;
+      case (parseInt($chal1Guess.val()) === randomNumber):
+        currentGame.winnerName = currentGame.chal1Name
+        isWinner()
+        break;
+      case (parseInt($chal2Guess.val()) === randomNumber):
+        currentGame.winnerName = currentGame.chal2Name
+        isWinner()
+        break;
+      default:
+        return;
+    }
+  }
+
   function isBlank(...inputs) {
     return inputs.some(input => {
       return input.val() === '';
@@ -57,6 +79,15 @@ $(document).ready(function () {
 
   // range, update button
   // ----------------------------------------------------------------
+  function incrementRange() {
+    range.min -= 10;
+    range.max += 10;
+
+    if (range.min < 0) {
+      range.min = 0;
+    }
+  }
+
   function resetRangeInputs() {
     $userMinRange.val('');
     $userMaxRange.val('');
@@ -109,6 +140,13 @@ $(document).ready(function () {
 
   // latest score
   // ----------------------------------------------------------------
+  function resetScore() {
+    $scoreChal1Guess.text('--')
+    $scoreChal2Guess.text('--')
+    $scoreChal1Feedback.text('')
+    $scoreChal2Feedback.text('')
+  }
+
   function renderChallengerNames() {
     $scoreChal1Name.text($chal1Name.val());
     $scoreChal2Name.text($chal2Name.val());
@@ -135,7 +173,7 @@ $(document).ready(function () {
     $scoreChal2Guess.text($chal2Guess.val());
   }
 
-  // game cards
+  // game, cards
   // ----------------------------------------------------------------
   class Game {
     constructor(chal1Name, chal2Name, winnerName) {
@@ -160,10 +198,22 @@ $(document).ready(function () {
     }
   }
 
-  function appendGameCard() {
+  function appendGameCard(game) {
     let gameNode = renderGameCard(game);
 
     $sectionOutput.append(gameNode);
+  }
+
+  function isWinner() {
+    currentGame.endTimer()
+    appendGameCard(currentGame)
+    currentGame.endTime = '';
+    currentGame.winnerName = ''
+    currentGame.guess = 0
+    incrementRange()
+    randomNumber = setRandomNumber()
+    renderRangeDisplay()
+    resetScore()
   }
 
   function renderGameCard(game) {
@@ -191,7 +241,6 @@ $(document).ready(function () {
               </div>
             </article>`;
   }
-
 
   // errors
   // ----------------------------------------------------------------
@@ -278,10 +327,19 @@ $(document).ready(function () {
       return;
     }
 
+    if (currentGame === '') {
+      currentGame = new Game;
+      currentGame.startTimer();
+      currentGame.chal1Name = $chal1Name.val();
+      currentGame.chal2Name = $chal2Name.val();
+    }
+
+    currentGame.incrementGuess();
     disableNameInputs();
     renderChallengerNames();
     renderChallengerGuesses();
     renderChallengerFeedback();
+    checkIfWinner();
     resetGuessInputs();
   }
 
@@ -293,6 +351,7 @@ $(document).ready(function () {
     } else {
       setRange();
       randomNumber = setRandomNumber();
+      console.log(randomNumber);
       resetRangeInputs();
       renderRangeDisplay();
       toggleUpdateButton();
@@ -303,17 +362,14 @@ $(document).ready(function () {
   // ----------------------------------------------------------------
   function startGame() {
     setRandomNumber();
-    console.log(range);
-    console.log(randomNumber);
     renderRangeDisplay();
+    console.log(randomNumber);
   }
 
   startGame();
 });
 
 // TODO add responsive design
-// TODO add game class to render cards
 // TODO add close button listener on right side of page
-// TODO add guess counter
 // TODO add reset game functionality
 // TODO add clear game functionality
