@@ -9,6 +9,8 @@ $(document).ready(function () {
   const $chal1Guess = $('#challenger-1-guess');
   const $chal2Guess = $('#challenger-2-guess');
   const $clearGameButton = $('#clear-game-button');
+  const $headerH1 = $('.header__h1')
+  const $headerP = $('.header p')
   const $main = $('.main');
   const $maxRangeDisplay = $('#range-max-display');
   const $minRangeDisplay = $('#range-min-display');
@@ -125,6 +127,14 @@ $(document).ready(function () {
 
   // name, guess, submit, reset, clear
   // ----------------------------------------------------------------
+  function disableClearButton() {
+    $clearGameButton.attr('disabled', true);
+  }
+
+  function enableClearButton() {
+    $clearGameButton.attr('disabled', false);
+  }
+
   function disableNameInputs() {
     $chal1Name.attr('disabled', true);
     $chal2Name.attr('disabled', true);
@@ -153,38 +163,8 @@ $(document).ready(function () {
     }
   }
 
-  function disableClearButton() {
-    $clearGameButton.attr('disabled', true);
-  }
-
-  function enableClearButton() {
-    $clearGameButton.attr('disabled', false);
-  }
-
   // latest score
   // ----------------------------------------------------------------
-  function resetScore() {
-    $scoreChal1Guess.text('--');
-    $scoreChal2Guess.text('--');
-    $scoreChal1Feedback.text('');
-    $scoreChal2Feedback.text('');
-  }
-
-  function resetScoreName() {
-    $scoreChal1Name.val('');
-    $scoreChal2Name.val('');
-  }
-
-  function renderChallengerNames() {
-    $scoreChal1Name.text($chal1Name.val());
-    $scoreChal2Name.text($chal2Name.val());
-  }
-
-  function renderChallengerFeedback() {
-    $scoreChal1Feedback.text(parseChallengerFeedback($chal1Guess.val()));
-    $scoreChal2Feedback.text(parseChallengerFeedback($chal2Guess.val()));
-  }
-
   function parseChallengerFeedback(guess) {
     switch (true) {
       case (guess < randomNumber):
@@ -199,6 +179,28 @@ $(document).ready(function () {
   function renderChallengerGuesses() {
     $scoreChal1Guess.text($chal1Guess.val());
     $scoreChal2Guess.text($chal2Guess.val());
+  }
+
+  function renderChallengerNames() {
+    $scoreChal1Name.text($chal1Name.val());
+    $scoreChal2Name.text($chal2Name.val());
+  }
+
+  function renderChallengerFeedback() {
+    $scoreChal1Feedback.text(parseChallengerFeedback($chal1Guess.val()));
+    $scoreChal2Feedback.text(parseChallengerFeedback($chal2Guess.val()));
+  }
+
+  function resetScore() {
+    $scoreChal1Guess.text('--');
+    $scoreChal2Guess.text('--');
+    $scoreChal1Feedback.text('');
+    $scoreChal2Feedback.text('');
+  }
+
+  function resetScoreName() {
+    $scoreChal1Name.val('');
+    $scoreChal2Name.val('');
   }
 
   // game, cards
@@ -354,6 +356,7 @@ $(document).ready(function () {
     if (parseInt(e.target.value) >= 0) {
       removeErrorBorder($(e.target));
       removeErrorNode($(e.target));
+      toggleUpdateButton();
     }
 
     if (e.target.id === 'max-range') {
@@ -373,7 +376,6 @@ $(document).ready(function () {
     resetScore();
     currentGame.startTimer();
     currentGame.guess = 0;
-    console.log(randomNumber);
   }
 
   function handleSubmitClick() {
@@ -418,7 +420,6 @@ $(document).ready(function () {
 
     setRange();
     randomNumber = setRandomNumber();
-    console.log(randomNumber);
     resetRangeInputs();
     renderRangeDisplay();
   }
@@ -426,6 +427,8 @@ $(document).ready(function () {
   // start game
   // ----------------------------------------------------------------
   function startGame() {
+    $headerH1.hide().fadeIn(1500)
+    $headerP.hide().fadeIn(1500)
     setRandomNumber();
     renderRangeDisplay();
     console.log(randomNumber);
@@ -433,6 +436,3 @@ $(document).ready(function () {
 
   startGame();
 });
-
-// TODO add responsive design
-// TODO add close button listener on right side of page
