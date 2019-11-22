@@ -234,6 +234,7 @@ $(document).ready(function () {
 
   function isWinner() {
     currentGame.endTimer();
+    gameHistory.push(currentGame);
     appendGameCard(currentGame);
     currentGame.endTime = '';
     currentGame.winnerName = '';
@@ -306,12 +307,13 @@ $(document).ready(function () {
   $submitGuessButton.on('click', handleSubmitClick);
   $resetGameButton.on('click', handleResetClick);
   $clearGameButton.on('click', handleClearClick);
+  $sectionOutput.on('click', '.button--close', handleCloseClick);
 
   // event handlers
   // ----------------------------------------------------------------
   function handleClearClick() {
     disableClearButton();
-    $resetGameButton.attr('disabled', true)
+    $resetGameButton.attr('disabled', true);
     $sectionOutput.children().remove();
     resetChallengerNames();
     enableNameInputs();
@@ -322,6 +324,10 @@ $(document).ready(function () {
     renderRangeDisplay();
     resetScoreName();
     resetScore();
+  }
+
+  function handleCloseClick(e) {
+    $(e.target).parents('article').remove()
   }
 
   function handleNameKeydown(e) {
@@ -430,4 +436,3 @@ $(document).ready(function () {
 
 // TODO add responsive design
 // TODO add close button listener on right side of page
-// TODO add clear game functionality
