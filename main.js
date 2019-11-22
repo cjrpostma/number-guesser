@@ -251,3 +251,12 @@ $(document).ready(function () {
 
   startGame();
 });
+
+// TODO add responsive design
+// TODO add timer
+// TODO add game class to render cards
+// TODO add rendering of game cards
+// TODO add close button listener on right side of page
+// TODO add guess counter
+// TODO add reset game functionality
+// TODO add clear game functionality
